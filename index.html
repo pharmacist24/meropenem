@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>meropenem</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meropenem Dispensing Form</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px 25px;
+            border-radius: 8px;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .success-message.show { display: block; }
+        .checkmark { font-size: 24px; vertical-align: middle; margin-left: 10px; }
+        .hidden { display: none; }
+        .loading-spinner { 
+            /* Add your spinner styles here */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loading-spinner hidden"></div>
+        <div class="success-message" id="successMessage">
+            ✅ تم الحفظ بنجاح! على قدر أهل العزم تأتي العزائم  <span class="checkmark">✓</span>
+        </div>
+        
+        <h1 class="form-title">Meropenem Dispensing Record</h1>
+        
+        <form class="dispensing-form" onsubmit="return submitForm(event)">
+            <input type="hidden" name="sheetName" value="Meropenem_Dispensing">
+            
+            <div class="form-group">
+                <label class="form-label">المستشفى</label>
+                <select class="form-input" name="hospital" required>
+                    <option>مستشفى بغداد التعليمي</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">اسم المريض</label>
+                    <input type="text" class="form-input" name="patientName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">الجنس</label>
+                    <select class="form-input" name="gender" required>
+                        <option>ذكر</option>
+                        <option>أنثى</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">العمر</label>
+                    <input type="number" class="form-input" name="age" min="0" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">التشخيص</label>
+                <select id="diagnosis" class="form-input" name="diagnosis" onchange="toggleOtherDiagnosis()" required>
+                    <option>Sepsis</option>
+                    <option>Contaminated blast injury</option>
+                    <option>Infective bronchiectasis exacerbation</option>
+                    <option>Neutropenic sepsis</option>
+                    <option>Pyogenic liver abscess</option>
+                    <option>Severe diabetic foot infection</option>
+                    <option>Acute rhinosinusitis due to intubation</option>
+                    <option>Gangrenous cellulitis (necrotizing fasciitis or gas gangrene)</option>
+                    <option>Lung abscess</option>
+                    <option>Pleural empyema ESBL positive</option>
+                    <option>Severe secondary peritonitis</option>
+                    <option>Bacterial meningitis</option>
+                    <option>HAP Post-op. Ventilator ESBL positive</option>
+                    <option>NVE - Acute presentation (severe sepsis with ESBL)</option>
+                    <option>Proven acute pancreatitis</option>
+                    <option>Severe CAP admitted to ICU</option>
+                    <option>آخر</option>
+                </select>
+                <input type="text" id="otherDiagnosis" class="form-input hidden" name="otherDiagnosis" placeholder="حدد التشخيص">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">الجرعة (mg)</label>
+                    <input type="number" id="dose" class="form-input" name="dose" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">التكرار</label>
+                    <select class="form-input" name="frequency" required>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">فترة الرقود</label>
+                <input type="text" class="form-input" name="duration" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">الكمية 1g</label>
+                    <input type="number" id="quantity1g" class="form-input" name="quantity1g" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">الكمية 500mg</label>
+                    <input type="number" id="quantity500mg" class="form-input" name="quantity500mg" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">فحص الحساسية</label>
+                    <select class="form-input" name="allergyTest" required>
+                        <option>نعم</option>
+                        <option>كلا</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">اسم الصيدلي</label>
+                    <select class="form-input" name="pharmacistName" required>
+                        <option>مصطفى حسين</option>
+                        <option>ياسر محي</option>
+                        <option>اسامه محمد</option>
+                        <option>لينة عبد الكريم</option>
+                        <option>مصطفى محمد</option>
+                        <option>محمد عبدالله</option>
+                        <option>علي جلال</option>
+                        <option>يمنى محمد</option>
+                        <option>مريم جاسم</option>
+                        <option>ديانا احمد</option>
+                        <option>مؤمنه مناضل</option>
+                        <option>محمد ابراهيم</option>
+                        <option>هنادي محمود</option>
+                        <option>ثريا عماد</option>                        
+                        <option>داليا عبد الزهره</option>
+                        <option>علي صادق</option>
+                        <option>نور علي</option>
+                        <option>عبدالله رائد</option>
+                        <option>اسلام حسن</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">إرسال النموذج</button>
+        </form>
+
+        <footer class="footer">
+            made by Luay
+        </footer>
+    </div>
+    <script>
+        const APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwA2sbvpq5LpHrKf8VOrpK0R6-qX5R5iJSGlAdVoBDKHLwxvp2fiwAbb2gHoMmMAsEC/exec';
+
+        const form = document.querySelector('.dispensing-form');
+        const spinner = document.querySelector('.loading-spinner');
+        const submitBtn = document.querySelector('.submit-btn');
+
+        function toggleOtherDiagnosis() {
+            const diagnosisSelect = document.getElementById('diagnosis');
+            const otherDiagnosisInput = document.getElementById('otherDiagnosis');
+            otherDiagnosisInput.classList.toggle('hidden', diagnosisSelect.value !== 'آخر');
+            otherDiagnosisInput.required = diagnosisSelect.value === 'آخر';
+        }
+
+        async function submitForm(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            spinner.classList.remove('hidden');
+
+            try {
+                if (!form.checkValidity()) {
+                    throw new Error('الرجاء ملء جميع الحقول المطلوبة');
+                }
+
+                const formData = new FormData(form);
+                
+                if (formData.get('diagnosis') === 'آخر') {
+                    formData.set('diagnosis', formData.get('otherDiagnosis'));
+                }
+
+                if (formData.get('diagnosis') !== 'آخر') {
+                    formData.delete('otherDiagnosis');
+                }
+
+                const response = await fetch(APP_SCRIPT_URL, {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+
+                if (response.ok) {
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.classList.add('show');
+                    setTimeout(() => successMsg.classList.remove('show'), 5000);
+                    form.reset();
+                    toggleOtherDiagnosis();
+                } else {
+                    throw new Error('فشل في الحفظ');
+                }
+            } catch (error) {
+                alert(`خطأ: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                spinner.classList.add('hidden');
+            }
+        }
+
+        form.addEventListener('input', () => {
+            submitBtn.disabled = !form.checkValidity();
+        });
+
+        document.getElementById('diagnosis').addEventListener('change', toggleOtherDiagnosis);
+
+        // Automatically set quantity500mg to 0 when quantity1g is entered
+        document.getElementById('quantity1g').addEventListener('input', function() {
+            document.getElementById('quantity500mg').value = 0;
+        });
+    </script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
